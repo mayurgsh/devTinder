@@ -4,7 +4,7 @@ const app=express()
 //   res.send("hello from dashboard")
 // })
 app.use('/test',(req,res)=>{
-res.send("Hello from Test")
+res.send("Hello from Test added")
 })
 app.listen(3000,()=>{
   console.log("listning to server 3000 succesfully....")
