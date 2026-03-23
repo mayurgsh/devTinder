@@ -1,19 +1,23 @@
-const express = require("express");
-const app = express();
-
+const express=require('express')
+const app=express()
 
 app.get('/user',(req,res)=>{
-  res.send({firstname:"Mayur",lastName:"shinde"})
+
+  res.send({name:"mayur",address:"Akola"})
 })
 
-app.post('/user',(req,res)=>{
-  res.send("data saved succesfully into database....")
+app.get('/user/:userId',(req,res)=>{
+  console.log(req.params)
+  res.send("please find here perticular user details here")
 })
 
-app.delete('/user',(req,res)=>{
-  res.send("user data deleted succesfully from database..")
-})
 
-app.listen(3000, () => {
-  console.log("listning to server 3000 succesfully....");
-});
+
+
+
+app.get('/home',(req,res)=>{
+  res.send("this is home page...")
+})
+app.listen(3000,()=>{
+  console.log("server running on port 3000")
+})
