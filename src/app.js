@@ -1,34 +1,45 @@
 const express = require("express");
+const { dbConnect } = require("./config/database");
 const app = express();
+const User = require("./models/user");
+//added middleware to convert json into javascript object
+app.use(express.json());
 
-const User=require("./models/user")
-const {connectDb}=require('./config/database')
+app.get("/user", async (req, res) => {
+  try {
+    const userDetails = await User.find({ emailId: req.body.emailId });
 
-app.post("/signup",async(req,res)=>{
-  const userObj={
-    firstName:"gauri",
-    lastName:"shinde",
-    emailId:"gauri@gmail.com",
-    age:34
+    if(userDetails.length ===0){
+      res.send("user is not available please enter proper mail id")
+    }
+    else{
+
+      res.send(userDetails);
+    }
+  } catch (err) {
+    res.send("unknown error");
   }
-let user= new User(userObj)
-try{
 
-  await user.save()
-  res.send("data saved succesfully..")
-} catch(err){
-  res.status(400).send("error occuere")
-}
-
-})
-  
-connectDb().then(()=>{
-  console.log("database connection established")
-  app.listen(3000, () => {
-  console.log("server running on port 3000");
 });
-}).catch((err)=>{
-console.log("connection failed")
-})
+app.post("/signup", async (req, res) => {
 
 
+  const User = new User(req.body);
+  try {
+    await User.save();
+    res.send("data saved succesfully..");
+  } catch (err) {
+    res.send("error occured");
+  }
+});
+dbConnect()
+  .then(() => {
+    console.log("connected to database succesfull...");
+
+    app.listen(3000, () => {
+      console.log("server running on port 3000");
+    });
+  })
+  .catch((err) => {
+    console.log("dbconnection failed");
+  });
