@@ -1,31 +1,34 @@
 const express = require("express");
 const app = express();
 
-// const authAdmin=()=>{
-//   const token="xyz"
-//   const authorisedAdmin=token ==="xyz";
-//   if(!authorisedAdmin){
-//    res.status(401).send("you are unuthorised to admin page..")
-//   }
-// }
+const User=require("./models/user")
+const {connectDb}=require('./config/database')
 
-const { adminAuth } = require("./middlewares/auth");
-app.use("/admin", adminAuth);
-app.get("/admin/getAllUserData", (req, res) => {
-  res.send("All admin data recieved");
-});
+app.post("/signup",async(req,res)=>{
+  const userObj={
+    firstName:"gauri",
+    lastName:"shinde",
+    emailId:"gauri@gmail.com",
+    age:34
+  }
+let user= new User(userObj)
+try{
 
-app.get("/admin/getAllUserData", (req, res) => {
-  res.send("All admin data recieved");
-});
+  await user.save()
+  res.send("data saved succesfully..")
+} catch(err){
+  res.status(400).send("error occuere")
+}
 
-app.post("/admin/saveAdminData", (req, res, next) => {
-  res.send("Admin Data saved succesfully");
-});
-
-app.get("/user", (req, res, next) => {
-  res.send("User data");
-});
-app.listen(3000, () => {
+})
+  
+connectDb().then(()=>{
+  console.log("database connection established")
+  app.listen(3000, () => {
   console.log("server running on port 3000");
 });
+}).catch((err)=>{
+console.log("connection failed")
+})
+
+
