@@ -9,21 +9,17 @@ app.get("/user", async (req, res) => {
   try {
     const userDetails = await User.find({ emailId: req.body.emailId });
 
-    if(userDetails.length ===0){
-      res.send("user is not available please enter proper mail id")
-    }
-    else{
-
-      res.send(userDetails);
+    if (userDetails.length === 0) {
+      res.send("user is not available please enter proper mail id");
+    } else {
+      res.send(userDetail);
     }
   } catch (err) {
-    res.send("unknown error");
+    res.status(500).send("something went wrong");
   }
-
 });
+
 app.post("/signup", async (req, res) => {
-
-
   const User = new User(req.body);
   try {
     await User.save();
@@ -32,6 +28,25 @@ app.post("/signup", async (req, res) => {
     res.send("error occured");
   }
 });
+
+app.get("/feed", async (req, res) => {
+  try {
+    const allUsers = await User.find({});
+    res.send(allUsers);
+  } catch (err) {
+    res.status(400).send("error occured in feed api");
+  }
+});
+
+
+app.get('/findbyMailId',async(req,res)=>{
+ const userBymailId=await User.findOne({emailId:req.body.emailId})
+ res.send(userBymailId)
+
+
+
+ 
+})
 dbConnect()
   .then(() => {
     console.log("connected to database succesfull...");
